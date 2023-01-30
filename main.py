@@ -21,6 +21,8 @@ def message(payload):
     channel = event.get('channel')
     uid = event.get('user')
     text = event.get('text')
+    generateAndPostMsg(text,uid,channel)
+
 try:
     response = client.chat_postMessage(
         channel="#8-ball-reincarnated-testing",
@@ -29,5 +31,17 @@ try:
     #print(response)
 except SlackApiError as e:
     print(e)
+
+
+def generateAndPostMsg(text,userid,channel):
+    response = openai.Completion.create(
+        model="text-davinci-001",
+        prompt=text,
+        temperature=0.1,
+        max_tokens=100
+    )
+    client.chat_postMessage(channel=channel, text=response)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
