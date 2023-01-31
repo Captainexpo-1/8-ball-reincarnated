@@ -31,29 +31,28 @@ A: If you move to Japan, you will be kidnapped at 8:58 PM on July 1st amidst you
 Q: May I offer you a drink?
 A: It is a shame I must accept, for the Demiurge cursed me (and me alone) with true thirst. To think I am grateful for your offer would be a grave error. Shaken, not stirred. ✅
 Q: {question}
+{"(8-ball's answer is unusually intricate:)" if random.random() < 0.3 else "(8-ball's answer is unusually perceptive:)"}
 A: """
-
 
 
 @slack_event_adapter.on('app_mention')
 def message(payload):
-
     event = payload.get('event', {})
     channel = event.get('channel')
     uid = event.get('user')
     text = event.get('text')
 
-    canpost = True
+    can_post = True
     for x in postedMSGS:
-        if x.get('user') != uid and x.get('text') != text:
-            print('can\'t post, duplicate.')
-        else:
-            canpost = False
+        if event.get('client_msg_id') == x:
+            can_post = False
 
-    if canpost:
+    if can_post:
         print(postedMSGS)
-        postedMSGS.append(event)
+        postedMSGS.append(event.get('client_msg_id'))
         generateAndPostMsg(text, uid, channel)
+    else:
+        print('can\'t post, duplicate.')
 
 
 try:
@@ -66,16 +65,20 @@ except SlackApiError as e:
 
 
 def generateAndPostMsg(text, userid, channel):
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt(text),
-        max_tokens=3000,
-        n=1,
-        stop=None,
-        temperature=0.6
-    )
-    result = response.choices[0].text
-    client.chat_postMessage(channel=channel, text=result)
+    try:
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=prompt(text),
+            max_tokens=3000,
+            n=1,
+            stop=None,
+            temperature=1
+        )
+        result = response.choices[0].text
+        client.chat_postMessage(channel=channel, text=result)
+    except Exception as e:
+        client.chat_postMessage(channel=channel, text=f"An error occurred: {e}")
+
 
 if __name__ == "__main__":
     app.run(debug=False)
