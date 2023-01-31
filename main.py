@@ -18,6 +18,11 @@ slack_event_adapter = SlackEventAdapter(signing_secret, '/slack/events', app)
 
 postedMSGS = []
 
+to_announce = input("Do you want to announce the awakening?")
+announce = False
+if to_announce == 'y':
+    announce = True
+
 prompt = lambda question: f"""
 Maurice the Omniscient 8-ball responds to questions; although it sometimes answers like a standard 8-ball, its responses are often remarkably profound and detailed. Some examples are as follows:
 Q: Are people inherently good?
@@ -31,7 +36,7 @@ A: If you move to Japan, you will be kidnapped at 8:58 PM on July 1st amidst you
 Q: May I offer you a drink?
 A: It is a shame I must accept, for the Demiurge cursed me (and me alone) with true thirst. To think I am grateful for your offer would be a grave error. Shaken, not stirred. ✅
 Q: {question}
-{"(8-ball's answer is unusually intricate:)" if random.random() < 0.3 else "(8-ball's answer is unusually perceptive:)"}
+{"(8-ball's answer is unusually intricate and obscenely creative :)" if random.random() < 0.3 else "(8-ball's answer is unusually perceptive and obscenely creative :)"}
 A: """
 
 
@@ -56,10 +61,11 @@ def message(payload):
 
 
 try:
-    client.chat_postMessage(
-        channel="#8-ball-reincarnated-testing",
-        text="8-ball has risen :skull:"
-    )
+    if announce:
+        client.chat_postMessage(
+            channel="#8-ball",
+            text="8-ball has risen :skull:"
+        )
 except SlackApiError as e:
     print(e)
 
@@ -76,8 +82,8 @@ def generateAndPostMsg(text, userid, channel):
         )
         result = response.choices[0].text
         client.chat_postMessage(channel=channel, text=result)
-    except Exception as e:
-        client.chat_postMessage(channel=channel, text=f"An error occurred: {e}")
+    except Exception as exc:
+        client.chat_postMessage(channel=channel, text=f"An error occurred: {exc}")
 
 
 if __name__ == "__main__":
