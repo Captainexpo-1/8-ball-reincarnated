@@ -18,10 +18,7 @@ slack_event_adapter = SlackEventAdapter(signing_secret, '/slack/events', app)
 
 postedMSGS = []
 
-to_announce = input("Do you want to announce the awakening?")
 announce = False
-if to_announce == 'y':
-    announce = True
 
 prompt = lambda question: f"""
 Maurice the Omniscient 8-ball responds to questions; although it sometimes answers like a standard 8-ball, its responses are often remarkably profound and detailed.
