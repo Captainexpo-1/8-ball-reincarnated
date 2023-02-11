@@ -90,5 +90,5 @@ app = Flask(__name__)
 def hello_world():
     return "<p>Hello, World!</p>"
 def run_server():
-    app.run(host='127.0.0.1', port=os.getenv("PORT"))
+    app.run(host='0.0.0.0', port=os.getenv("PORT"))
 run_server()
