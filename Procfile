@@ -1,1 +1,1 @@
-web: python 8ball.py
+web: python3 8ball.py
