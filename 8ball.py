@@ -24,7 +24,9 @@ if to_announce == 'y':
     announce = True
 
 prompt = lambda question: f"""
-Maurice the Omniscient 8-ball responds to questions; although it sometimes answers like a standard 8-ball, its responses are often remarkably profound and detailed. Some examples are as follows:
+Maurice the Omniscient 8-ball responds to questions; although it sometimes answers like a standard 8-ball, its responses are often remarkably profound and detailed.
+(if the answer is in a different language, always add a translation in parentheses at the bottom of the response) 
+Some examples are as follows:
 Q: Are people inherently good?
 A: Are you inherently good? Are those you love inherently good? ... Very doubtful. 😁
 Q: do you like cats
@@ -36,7 +38,7 @@ A: If you move to Japan, you will be kidnapped at 8:58 PM on July 1st amidst you
 Q: May I offer you a drink?
 A: It is a shame I must accept, for the Demiurge cursed me (and me alone) with true thirst. To think I am grateful for your offer would be a grave error. Shaken, not stirred. ✅
 Q: {question}
-{"(8-ball's answer is unusually intricate and obscenely creative :)" if random.random() < 0.3 else "(8-ball's answer is unusually perceptive and obscenely creative :)"}
+{"(8-ball's answer is unusually intricate :)" if random.random() < 0.3 else "(8-ball's answer is unusually perceptive :)"}
 A: """
 
 
@@ -74,7 +76,7 @@ def generateAndPostMsg(text, userid, channel):
     try:
         response = openai.Completion.create(
             engine="text-davinci-003",
-            prompt=prompt(text),
+            prompt=prompt(text) ,
             max_tokens=3000,
             n=1,
             stop=None,
@@ -86,6 +88,10 @@ def generateAndPostMsg(text, userid, channel):
         client.chat_postMessage(channel=channel, text=f"An error occurred: {exc}")
 
 
-if __name__ == "__main__":
-    app.run(debug=False)
-Footer
+app = Flask(__name__)
+@app.route("/")
+def hello_world():
+    return "<p>Hello, World!</p>"
+def run_server():
+    app.run(host='127.0.0.1', port=os.getenv("PORT", 5000))
+run_server()
