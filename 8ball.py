@@ -88,7 +88,7 @@ def generateAndPostMsg(text, userid, channel):
 app = Flask(__name__)
 @app.route("/")
 def hello_world():
-    return "<p>World, Hello</p>"
+    return "<p>BINGGGGG</p>"
 def run_server():
     app.run(host='127.0.0.1', port=os.getenv("$PORT"))
 run_server()
