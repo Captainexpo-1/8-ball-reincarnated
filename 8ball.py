@@ -14,7 +14,7 @@ signing_secret = os.getenv('SIGNING_SECRET')
 
 app = Flask(__name__)
 client = slack_sdk.WebClient(token=slack_token)
-slack_event_adapter = SlackEventAdapter(signing_secret, '/slack/events', app)
+slack_event_adapter = SlackEventAdapter(signing_secret, '/mentions', app)
 
 postedMSGS = []
 
@@ -88,7 +88,7 @@ def generateAndPostMsg(text, userid, channel):
 app = Flask(__name__)
 @app.route("/")
 def hello_world():
-    return "<p>Hello, World!</p>"
+    return "<p>World, Hello</p>"
 def run_server():
-    app.run(host='127.0.0.1', port=os.getenv("PORT", 5000))
+    app.run(host='127.0.0.1', port=os.getenv("$PORT"))
 run_server()
