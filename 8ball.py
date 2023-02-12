@@ -15,7 +15,7 @@ signing_secret = os.getenv('SIGNING_SECRET')
 
 app = Flask(__name__)
 client = slack_sdk.WebClient(token=slack_token)
-slack_event_adapter = SlackEventAdapter(signing_secret, '/', app)
+slack_event_adapter = SlackEventAdapter(signing_secret, '', app)
 
 postedMSGS = []
 
@@ -69,7 +69,7 @@ try:
 except SlackApiError as e:
     print(e)
 
-
+@slack_event_adapter.
 def generateAndPostMsg(text, userid, channel):
     try:
         response = openai.Completion.create(
