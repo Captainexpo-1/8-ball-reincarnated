@@ -93,5 +93,5 @@ CORS(app)
 def hello_world():
     return "<h1 style=\"margin-left=50%;\">BINGGGGG</h1>"
 def run_server():
-    app.run(host='0.0.0.0', port=os.getenv("PORT"))
+    app.run(host='0.0.0.0', port=os.getenv("PORT"),debug=True)
 run_server()
