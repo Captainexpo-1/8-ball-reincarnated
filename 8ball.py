@@ -89,7 +89,7 @@ def generateAndPostMsg(text, userid, channel):
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/")
+@app.route("/slack/events")
 def hello_world():
     return "<h1 style=\"color=red\">BINGGGGG</h1>"
 def run_server():
