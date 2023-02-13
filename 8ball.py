@@ -96,7 +96,7 @@ def hello_world():
 @app.route("/slack/events",methods=['POST'])
 def hello_world2():
     if request.method == 'POST':
-        return f"<h1>{random.random()+1}</h1>"
+        return request.form.get('challenge')
 def run_server():
     app.run(host='0.0.0.0', port=os.getenv("PORT"),debug=True)
 run_server()
