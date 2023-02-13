@@ -3,7 +3,7 @@ from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
 import os
 import openai
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 from slackeventsapi import SlackEventAdapter
 import random
@@ -91,10 +91,12 @@ CORS(app)
 
 @app.route("/")
 def hello_world():
+
     return f"<h1>{random.random()}</h1>"
-@app.route("/slack/events")
+@app.route("/slack/events",methods=['POST'])
 def hello_world2():
-    return f"<h1>{random.random()+1}</h1>"
+    if request.method == 'POST':
+        return f"<h1>{random.random()+1}</h1>"
 def run_server():
     app.run(host='0.0.0.0', port=os.getenv("PORT"),debug=True)
 run_server()
