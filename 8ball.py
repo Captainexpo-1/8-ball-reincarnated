@@ -97,8 +97,12 @@ def hello_world():
 def hello_world2():
     if request.method == 'POST':
         content = request.json
-        print(content['challenge'])
-        return content['challenge']
+        if content['challenge'] != None:
+            print(content['challenge'])
+            return content['challenge']
+        else:
+            return '<h1>hi!</h1>'
+
     else:
         return '<h1>hi!</h1>'
 def run_server():
