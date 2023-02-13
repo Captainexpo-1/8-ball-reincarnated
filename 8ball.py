@@ -7,6 +7,7 @@ from flask import Flask, request
 from flask_cors import CORS
 from slackeventsapi import SlackEventAdapter
 import random
+import json
 
 load_dotenv('.env')
 openai.api_key = os.getenv('OPENAI_TOKEN')
@@ -94,11 +95,11 @@ def hello_world():
 
     return f"<h1>{random.random()}</h1>"
 @app.route("/slack/events",methods=['POST'])
-def hello_world2():
+def hello_world2(payload):
     if request.method == 'POST':
         content = request.json
-        if content['challenge'] != None:
-            print(content['challenge'])
+        if not (payload.get('challenge') is None):
+            print(payload.get('challenge'))
             return content['challenge']
         else:
             return '<h1>hi!</h1>'
