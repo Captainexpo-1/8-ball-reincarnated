@@ -15,7 +15,7 @@ signing_secret = os.getenv('SIGNING_SECRET')
 
 app = Flask(__name__)
 client = slack_sdk.WebClient(token=slack_token)
-slack_event_adapter = SlackEventAdapter(signing_secret, '/', app)
+slack_event_adapter = SlackEventAdapter(signing_secret, '/slack/events', app)
 
 postedMSGS = []
 
@@ -91,7 +91,10 @@ CORS(app)
 
 @app.route("/")
 def hello_world():
-    return "<h1 style=\"margin-left=50%;\">BINGGGGG</h1>"
+    return f"<h1>{random.random()}</h1>"
+@app.route("/slack/events")
+def hello_world2():
+    return f"<h1>{random.random()+1}</h1>"
 def run_server():
     app.run(host='0.0.0.0', port=os.getenv("PORT"),debug=True)
 run_server()
