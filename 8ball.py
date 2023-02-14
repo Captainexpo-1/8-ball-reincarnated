@@ -95,12 +95,11 @@ def hello_world():
 
     return f"<h1>{random.random()}</h1>"
 @app.route("/slack/events",methods=['POST'])
-def hello_world2(payload):
+def hello_world2():
     if request.method == 'POST':
-        content = request.json
-        if not (payload.get('challenge') is None):
-            print(payload.get('challenge'))
-            return content['challenge']
+        if not (request.args.get('challenge') is None):
+            print(request.args.get('challenge'))
+            return request.args.get('challenge')
         else:
             return '<h1>hi!</h1>'
 
