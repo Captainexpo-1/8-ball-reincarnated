@@ -89,18 +89,21 @@ def generateAndPostMsg(text, userid, channel):
 
 app = Flask(__name__)
 CORS(app)
-"""@app.route("/slack/events",methods=['POST'])
-def hello_world2():
+@app.route("/slack/events",methods=['POST'])
+def Test():
     if request.method == 'POST':
         if not (request.args.get('challenge') is None):
             print(request.args.get('challenge'))
             return request.args.get('challenge')
         else:
-            return '<h1>hi!</h1>'
+            channel = request.args.get('channel')
+            uid = request.args.get('user')
+            text = request.args.get('text')
+            generateAndPostMsg(text,uid,channel)
 
     else:
         return '<h1>hi!</h1>'
-"""
+
 def run_server():
     app.run(host='0.0.0.0', port=os.getenv("PORT"),debug=True)
 run_server()
