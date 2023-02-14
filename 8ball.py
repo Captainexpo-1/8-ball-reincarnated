@@ -53,7 +53,7 @@ def message(the_request):
     can_post = True
     for x in postedMSGS:
         if event.get('client_msg_id') == x:
-            can_post = False
+            can_post = True
 
     if can_post:
         print(postedMSGS)
