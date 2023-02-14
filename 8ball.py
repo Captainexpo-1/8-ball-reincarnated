@@ -98,7 +98,7 @@ def Test():
             print(request.args.get('challenge'))
             return request.args.get('challenge')
         else:
-            print(request.get_json())
+            print(request.get_json().get('event'), {})
             #message(request)
             return 'wow!'
 
