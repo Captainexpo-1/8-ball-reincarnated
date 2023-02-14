@@ -43,24 +43,22 @@ A: """
 usefultxt = ''
 
 @slack_event_adapter.on('app_mention')
-def message(the_request):
-    event = the_request.args.get('event', {})
+def message(**payload):
+    event = payload.get('event', {})
     channel = event.get('channel')
     print(channel)
     uid = event.get('user')
     text = event.get('text')
-    text2 = the_request.args.get('text')
     can_post = True
-    msgid = str(text2)
     print(uid,text)
     for x in postedMSGS:
-        if msgid == x:
+        if payload.get('text') == x:
             can_post = False
 
     if can_post:
         print(postedMSGS)
-        postedMSGS.append(event.get('client_msg_id'))
-        generateAndPostMsg(text, '#8-ball')
+        #postedMSGS.append(event.get('client_msg_id'))
+        #generateAndPostMsg(text, '#8-ball')
     else:
         print('can\'t post, duplicate.')
 
