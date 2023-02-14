@@ -42,7 +42,7 @@ A: """
 
 usefultxt = ''
 
-@slack_event_adapter.on('app_mention')
+#@slack_event_adapter.on('app_mention')
 def message(**payload):
     event = payload.get('event', {})
     channel = event.get('channel')
@@ -98,7 +98,7 @@ def Test():
             print(request.args.get('challenge'))
             return request.args.get('challenge')
         else:
-            print(request)
+            print(request.get_json())
             #message(request)
             return 'wow!'
 
