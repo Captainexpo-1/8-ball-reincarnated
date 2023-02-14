@@ -51,9 +51,10 @@ def message(the_request):
     text = event.get('text')
 
     can_post = True
+    msgid = uid+text
     for x in postedMSGS:
-        if event.get('client_msg_id') == x:
-            can_post = True
+        if msgid == x:
+            can_post = False
 
     if can_post:
         print(postedMSGS)
