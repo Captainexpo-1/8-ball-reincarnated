@@ -46,6 +46,7 @@ usefultxt = ''
 def message(the_request):
     event = the_request.args.get('event', {})
     channel = event.get('channel')
+    print(channel)
     uid = event.get('user')
     text = event.get('text')
 
@@ -57,7 +58,7 @@ def message(the_request):
     if can_post:
         print(postedMSGS)
         postedMSGS.append(event.get('client_msg_id'))
-        generateAndPostMsg(text, uid, channel)
+        generateAndPostMsg(text, uid, '#8-ball')
     else:
         print('can\'t post, duplicate.')
 
@@ -83,9 +84,9 @@ def generateAndPostMsg(text, userid, channel):
             temperature=1
         )
         result = response.choices[0].text
-        client.chat_postMessage(channel=channel, text=result)
+        client.chat_postMessage(channel='#8-ball', text=result)
     except Exception as exc:
-        client.chat_postMessage(channel=channel, text=f"An error occurred: {exc}")
+        client.chat_postMessage(channel='#8-ball', text=f"An error occurred: {exc}")
 
 
 app = Flask(__name__)
