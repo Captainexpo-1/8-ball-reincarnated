@@ -51,7 +51,7 @@ def message(the_request):
     text = event.get('text')
 
     can_post = True
-    msgid = uid+text
+    msgid = str(uid)+str(text)
     for x in postedMSGS:
         if msgid == x:
             can_post = False
@@ -59,7 +59,7 @@ def message(the_request):
     if can_post:
         print(postedMSGS)
         postedMSGS.append(event.get('client_msg_id'))
-        generateAndPostMsg(text, uid, '#8-ball')
+        generateAndPostMsg(text, '#8-ball')
     else:
         print('can\'t post, duplicate.')
 
@@ -74,7 +74,7 @@ except SlackApiError as e:
     print(e)
 
 
-def generateAndPostMsg(text, userid, channel):
+def generateAndPostMsg(text, channel):
     try:
         response = openai.Completion.create(
             engine="text-davinci-003",
