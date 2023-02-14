@@ -20,7 +20,7 @@ slack_event_adapter = SlackEventAdapter(signing_secret, '/slack/events', app)
 
 postedMSGS = []
 
-announce = False
+announce = True
 
 prompt = lambda question: f"""
 Maurice the Omniscient 8-ball responds to questions; although it sometimes answers like a standard 8-ball, its responses are often remarkably profound and detailed.
@@ -64,7 +64,7 @@ def message(payload):
 try:
     if announce:
         client.chat_postMessage(
-            channel="#8-ball",
+            channel="#8-ball-reincarnated-testing",
             text="8-ball has risen :skull:"
         )
 except SlackApiError as e:
@@ -89,12 +89,7 @@ def generateAndPostMsg(text, userid, channel):
 
 app = Flask(__name__)
 CORS(app)
-
-@app.route("/")
-def hello_world():
-
-    return f"<h1>{random.random()}</h1>"
-@app.route("/slack/events",methods=['POST'])
+"""@app.route("/slack/events",methods=['POST'])
 def hello_world2():
     if request.method == 'POST':
         if not (request.args.get('challenge') is None):
@@ -105,6 +100,7 @@ def hello_world2():
 
     else:
         return '<h1>hi!</h1>'
+"""
 def run_server():
     app.run(host='0.0.0.0', port=os.getenv("PORT"),debug=True)
 run_server()
