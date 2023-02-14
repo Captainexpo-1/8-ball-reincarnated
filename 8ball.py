@@ -40,10 +40,11 @@ Q: {question}
 {"(8-ball's answer is unusually intricate :)" if random.random() < 0.3 else "(8-ball's answer is unusually perceptive :)"}
 A: """
 
+usefultxt = ''
 
 @slack_event_adapter.on('app_mention')
-def message(payload):
-    event = payload.get('event', {})
+def message(the_request):
+    event = the_request.args.get('event', {})
     channel = event.get('channel')
     uid = event.get('user')
     text = event.get('text')
@@ -96,10 +97,7 @@ def Test():
             print(request.args.get('challenge'))
             return request.args.get('challenge')
         else:
-            channel = request.args.get('channel')
-            uid = request.args.get('user')
-            text = request.args.get('text')
-            generateAndPostMsg(text,uid,channel)
+            message(request)
 
     else:
         return '<h1>hi!</h1>'
