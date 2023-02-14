@@ -100,7 +100,8 @@ def Test():
             print(request.args.get('challenge'))
             return request.args.get('challenge')
         else:
-            message(request)
+            print(request)
+            #message(request)
             return 'wow!'
 
     else:
