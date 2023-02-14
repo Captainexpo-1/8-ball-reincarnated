@@ -10,7 +10,7 @@ import random
 import json
 
 load_dotenv('.env')
-openai.api_key = os.getenv('OPENAI_TOKEN')
+openai.api_key = os.getenv('OPENAI_API_KEY')
 slack_token = os.getenv('SLACK_TOKEN')
 signing_secret = os.getenv('SIGNING_SECRET')
 
@@ -98,6 +98,7 @@ def Test():
             return request.args.get('challenge')
         else:
             message(request)
+            return 'wow!'
 
     else:
         return '<h1>hi!</h1>'
