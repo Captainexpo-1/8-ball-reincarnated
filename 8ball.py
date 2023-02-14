@@ -49,9 +49,9 @@ def message(the_request):
     print(channel)
     uid = event.get('user')
     text = event.get('text')
-
+    text2 = the_request.args.get('text')
     can_post = True
-    msgid = str(text)
+    msgid = str(text2)
     print(uid,text)
     for x in postedMSGS:
         if msgid == x:
