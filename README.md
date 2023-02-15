@@ -1,1 +1,1 @@
-This Slack bot is made for the #8-ball channel on the Hack Club slack. The previous 8-ball passed away, so this one took it's place.
+This Slack bot is made for the #8-ball channel on the Hack Club slack. It's hosted by heroku and uses the DaVinci-003 model by openai. 
