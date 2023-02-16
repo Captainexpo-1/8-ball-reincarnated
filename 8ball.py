@@ -79,7 +79,7 @@ except SlackApiError as e:
 def generateAndPostMsg(text, channel):
     try:
         response = openai.Completion.create(
-            engine="text-davinci-003",
+            engine="text-davinci-002",
             prompt=prompt(text) ,
             max_tokens=3000,
             n=1,
