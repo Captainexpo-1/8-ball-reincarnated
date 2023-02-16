@@ -25,6 +25,6 @@ slackeventsapi==3.0.1
 tqdm==4.64.1
 typing_extensions==4.4.0
 urllib3==1.26.14
-Werkzeug==2.2.2
+Werkzeug==2.2.3
 yarl==1.8.2
 flask-cors==3.0.10
