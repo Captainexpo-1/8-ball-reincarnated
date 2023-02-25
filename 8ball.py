@@ -52,7 +52,7 @@ def message(payload):
     uid = payload.get('user')
     text = payload.get('text')
     msgid = payload.get('client_msg_id')
-    text.replace('<@U04M46MS56D>', '')
+    text = text.replace('<@U04M46MS56D>', '')
     can_post = True
     print(uid,text)
     for x in postedMSGS:
