@@ -7,6 +7,7 @@ from flask import Flask, request
 from flask_cors import CORS
 from slackeventsapi import SlackEventAdapter
 import random
+import json
 
 load_dotenv('.env')
 openai.api_key = os.getenv('OPENAI_API_KEY')
@@ -53,7 +54,6 @@ def message(payload):
     msgid = payload.get('client_msg_id')
     can_post = True
     print(uid,text)
-    text.replace('<@U04M46MS56D>', 'Maurice,')
     for x in postedMSGS:
         if msgid == x:
             can_post = False
@@ -77,10 +77,9 @@ except SlackApiError as e:
 
 
 def generateAndPostMsg(text, channel):
-
     try:
         response = openai.Completion.create(
-            engine="text-da-vinci-003" if text.find(' --code ') == -1 else "code-davinci-002",
+            engine="text-davinci-002",
             prompt=prompt(text) ,
             max_tokens=3000,
             n=1,
