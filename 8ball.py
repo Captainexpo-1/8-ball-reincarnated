@@ -7,7 +7,6 @@ from flask import Flask, request
 from flask_cors import CORS
 from slackeventsapi import SlackEventAdapter
 import random
-import json
 
 load_dotenv('.env')
 openai.api_key = os.getenv('OPENAI_API_KEY')
@@ -52,6 +51,7 @@ def message(payload):
     uid = payload.get('user')
     text = payload.get('text')
     msgid = payload.get('client_msg_id')
+
     text = text.replace('<@U04M46MS56D>', '')
     can_post = True
     print(uid,text)
