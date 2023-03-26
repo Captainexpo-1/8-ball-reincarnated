@@ -54,18 +54,20 @@ def message(payload):
 
     text = text.replace('<@U04M46MS56D>', '')
     can_post = True
-    print(uid,text)
     for x in postedMSGS:
         if msgid == x:
             can_post = False
-    if channel != '#8-ball':
+        else:
+            print('can\'t post. Duplicate')
+    if channel != 'C03DNGQA6SY':
         can_post = False
+    else:
+        print('can\'t post. Wrong channel')
     if can_post:
         print(postedMSGS)
         postedMSGS.append(msgid)
         generateAndPostMsg(text, '#8-ball')
-    else:
-        print('can\'t post, duplicate.')
+
 try:
     if announce:
         client.chat_postMessage(
