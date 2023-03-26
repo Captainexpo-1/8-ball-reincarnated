@@ -58,15 +58,14 @@ def message(payload):
     for x in postedMSGS:
         if msgid == x:
             can_post = False
-
+    if channel != '#8-ball':
+        can_post = False
     if can_post:
         print(postedMSGS)
         postedMSGS.append(msgid)
         generateAndPostMsg(text, '#8-ball')
     else:
         print('can\'t post, duplicate.')
-
-
 try:
     if announce:
         client.chat_postMessage(
