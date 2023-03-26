@@ -61,8 +61,8 @@ def message(payload):
             print('can\'t post. Duplicate')
     if channel != 'C03DNGQA6SY':
         can_post = False
-    else:
         print('can\'t post. Wrong channel')
+
     if can_post:
         print(postedMSGS)
         postedMSGS.append(msgid)
