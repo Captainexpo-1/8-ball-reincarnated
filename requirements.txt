@@ -18,7 +18,7 @@ pycparser==2.21
 pyee==9.0.4
 pyslack==0.5.0
 python-dotenv==0.21.1
-requests==2.28.2
+requests==2.31.0
 slack-sdk==3.19.5
 slackeventsapi==3.0.1
 tqdm==4.64.1
