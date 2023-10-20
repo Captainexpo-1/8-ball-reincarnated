@@ -89,6 +89,7 @@ def generateAndPostMsg(text, channel):
             temperature=1
         )
         result = response.choices[0].text
+        print(response)
         client.chat_postMessage(channel='#8-ball', text=result)
     except Exception as exc:
         client.chat_postMessage(channel='#8-ball', text=f"An error occurred: {exc}")
