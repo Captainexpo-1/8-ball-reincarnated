@@ -7,7 +7,7 @@ from flask import Flask, request
 from flask_cors import CORS
 from slackeventsapi import SlackEventAdapter
 import random
-from prompt import Prompt
+from prompt import system_prompt
 
 
 
@@ -27,7 +27,7 @@ postedMSGS = []
 
 announce = True
 # set up prompt
-prompt = Prompt("./prompt.json")
+#prompt = Prompt("./prompt.json")
 
 
 
@@ -65,21 +65,25 @@ def message(payload):
         generateAndPostMsg(text, '#8-ball')
 
 
-
-def generateAndPostMsg(text, channel):
+def generate_msg(text):
     try:
-        random_system = random.choice([
-            "The 8-balls answer is unusually long. :)",
-            "The 8-balls answer is unusually perceptive. ;)",
-            "The 8-balls answer is unusually incomprehensible. :(",
-        ])
+        new_prompt = system_prompt
+        new_prompt.append({"role":"user","content":text})
         response = openai_client.chat.completions.create(
             model = "gpt-3.5-turbo",
-            messages = prompt.get_prompt_with_input(text,random_system),
+            messages = system_prompt#prompt.get_prompt_with_input(text,random_system),
         )
+        print("RETURN:",response.choices[0].message)
         result = response.choices[0].message.content
 
         print("OPENAI RESPONSE:", response)
+        return result
+    except Exception as e:
+        print(e)
+        return "An error occurred: " + str(e)
+def generateAndPostMsg(text, channel):
+    try:
+        result = generate_msg(text)
 
         client.chat_postMessage(channel='#8-ball', text=result)
     except Exception as exc:
@@ -106,3 +110,5 @@ def run_server():
     print('running server')
     app.run(host='0.0.0.0', port=os.getenv("PORT"),debug=True)
 run_server()    
+
+
