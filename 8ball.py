@@ -77,7 +77,7 @@ def generateAndPostMsg(text, channel):
             model = "gpt-3.5-turbo",
             messages = prompt.get_prompt_with_input(text,random_system),
         )
-        result = response.choices[0].message
+        result = response.choices[0]["message"]["content"]
 
         print("OPENAI RESPONSE:", response)
 
