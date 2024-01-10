@@ -13,7 +13,7 @@ itsdangerous==2.1.2
 Jinja2==3.1.2
 MarkupSafe==2.1.2
 multidict==6.0.4
-openai==0.26.4
+openai==1.7.0
 pycparser==2.21
 pyee==9.0.4
 pyslack==0.5.0
@@ -22,7 +22,7 @@ requests==2.31.0
 slack-sdk==3.19.5
 slackeventsapi==3.0.1
 tqdm==4.64.1
-typing_extensions==4.4.0
+typing_extensions==4.8.0
 urllib3==1.26.18
 Werkzeug==2.3.8
 yarl==1.8.2
