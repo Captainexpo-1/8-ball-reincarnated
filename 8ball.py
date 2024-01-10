@@ -9,10 +9,10 @@ from slackeventsapi import SlackEventAdapter
 import random
 from prompt import Prompt
 
-    
+client = openai.OpenAI()
+
 # Load environment variables
 load_dotenv('.env')
-openai.api_key = os.getenv('OPENAI_API_KEY')
 slack_token = os.getenv('SLACK_TOKEN')
 signing_secret = os.getenv('SIGNING_SECRET')
 # set up server + slack stuff
@@ -70,7 +70,7 @@ def generateAndPostMsg(text, channel):
             "The 8-balls answer is unusually perceptive. ;)",
             "The 8-balls answer is unusually incomprehensible. :(",
         ])
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model = "gpt-3.5-turbo",
             messages = prompt.get_prompt_with_input(text,random_system),
         )
