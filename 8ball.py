@@ -9,7 +9,33 @@ from slackeventsapi import SlackEventAdapter
 import random
 from prompt import Prompt
 
+    
+# Load environment variables
+load_dotenv('.env')
+openai.api_key = os.getenv('OPENAI_API_KEY')
+slack_token = os.getenv('SLACK_TOKEN')
+signing_secret = os.getenv('SIGNING_SECRET')
+# set up server + slack stuff
+app = Flask(__name__)
+client = slack_sdk.WebClient(token=slack_token)
+slack_event_adapter = SlackEventAdapter(signing_secret, '/slack/events', app)
 
+postedMSGS = []
+
+announce = True
+# set up prompt
+prompt = Prompt("./prompt.json")
+
+
+
+try:
+    if announce:
+        client.chat_postMessage(
+            channel="#8-ball-reincarnated-testing",
+            text="The 8-ball has risen :skull:"
+        )
+except Exception as e:
+    print(e)
 
 
 def message(payload):
@@ -74,34 +100,6 @@ def Test():
         return '<h1>This is the 8-ball! How are you doing today?</h1><a href="https://www.hackclub.com">Find us here ;)</a>'
 
 def run_server():
+    print('running server')
     app.run(host='0.0.0.0', port=os.getenv("PORT"),debug=True)
-if __name__ == "__main__":
-    
-    # Load environment variables
-    load_dotenv('.env')
-    openai.api_key = os.getenv('OPENAI_API_KEY')
-    slack_token = os.getenv('SLACK_TOKEN')
-    signing_secret = os.getenv('SIGNING_SECRET')
-
-    # set up server + slack stuff
-    app = Flask(__name__)
-    client = slack_sdk.WebClient(token=slack_token)
-    slack_event_adapter = SlackEventAdapter(signing_secret, '/slack/events', app)
-
-    postedMSGS = []
-
-    announce = True
-
-    # set up prompt
-    prompt = Prompt("./prompt.json")
-
-    run_server()    
-
-    try:
-        if announce:
-            client.chat_postMessage(
-                channel="#8-ball-reincarnated-testing",
-                text="The 8-ball has risen :skull:"
-            )
-    except Exception as e:
-        print(e)
+run_server()    
