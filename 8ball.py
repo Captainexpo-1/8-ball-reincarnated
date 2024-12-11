@@ -3,7 +3,6 @@ from slack_sdk.errors import SlackApiError
 import os
 import openai
 from flask import Flask, request
-from flask_cors import CORS
 from slackeventsapi import SlackEventAdapter
 import random
 from prompt import system_prompt
