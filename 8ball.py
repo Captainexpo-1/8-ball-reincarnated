@@ -9,13 +9,11 @@ from slackeventsapi import SlackEventAdapter
 import random
 from prompt import system_prompt
 
-
-
-
 # Load environment variables
 load_dotenv('.env')
 slack_token = os.getenv('SLACK_TOKEN')
 signing_secret = os.getenv('SIGNING_SECRET')
+
 # set up server + slack stuff
 app = Flask(__name__)
 client = slack_sdk.WebClient(token=slack_token)
@@ -26,10 +24,6 @@ openai_client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 postedMSGS = []
 
 announce = True
-# set up prompt
-#prompt = Prompt("./prompt.json")
-
-
 
 try:
     if announce:
@@ -71,7 +65,7 @@ def generate_msg(text):
         new_prompt.append({"role":"user","content":text})
         response = openai_client.chat.completions.create(
             model = "gpt-3.5-turbo",
-            messages = system_prompt#prompt.get_prompt_with_input(text,random_system),
+            messages = system_prompt
         )
         print("RETURN:",response.choices[0].message)
         result = response.choices[0].message.content
