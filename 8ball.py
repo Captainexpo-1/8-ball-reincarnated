@@ -35,7 +35,15 @@ def generate_msg(text):
         new_prompt.append({"role":"user","content":text})
         response = openai_client.chat.completions.create(
             model="gpt-3.5-turbo",
-            messages=new_prompt
+            messages=new_prompt,
+            response_format={
+                "type": "text"
+            },
+            temperature=1.4,
+            max_tokens=256,
+            top_p=0.54,
+            frequency_penalty=2,
+            presence_penalty=0
         )
         print("RETURN:",response.choices[0].message)
         result = response.choices[0].message.content

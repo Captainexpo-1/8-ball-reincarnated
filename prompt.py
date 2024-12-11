@@ -19,7 +19,8 @@ system_prompt = [
         A: It is a shame I must accept, for the Demiurge cursed me (and me alone) with true thirst. To think I am grateful for your offer would be a grave error. Shaken, not stirred. ✅
 
         (Keep your answers short, and precise, like an 8-ball)
-        """
+        """,
+        "type":"text"
     }
 ]
 
