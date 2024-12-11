@@ -1,6 +1,5 @@
 import slack_sdk
 from slack_sdk.errors import SlackApiError
-from dotenv import load_dotenv
 import os
 import openai
 from flask import Flask, request
@@ -10,29 +9,11 @@ import random
 from prompt import system_prompt
 
 # Load environment variables
-load_dotenv('.env')
-slack_token = os.getenv('SLACK_TOKEN')
-signing_secret = os.getenv('SIGNING_SECRET')
+from dotenv import load_dotenv
+load_dotenv()
 
-# set up server + slack stuff
-app = Flask(__name__)
-client = slack_sdk.WebClient(token=slack_token)
-slack_event_adapter = SlackEventAdapter(signing_secret, '/slack/events', app)
 
-openai_client = openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
-postedMSGS = []
-
-announce = True
-
-try:
-    if announce:
-        client.chat_postMessage(
-            channel="#8-ball-reincarnated-testing",
-            text="The 8-ball has risen :skull:"
-        )
-except Exception as e:
-    print(e)
 
 
 def message(payload):
@@ -43,29 +24,23 @@ def message(payload):
     msgid = payload.get('client_msg_id')
 
     text = text.replace('<@U04M46MS56D>', '')
-    can_post = True
-    for x in postedMSGS:
-        if msgid == x:
-            can_post = False
-        else:
-            print('can\'t post. Duplicate')
-    if channel != 'C03DNGQA6SY':
-        can_post = False
-        print('can\'t post. Wrong channel')
-
-    if can_post:
-        print(postedMSGS)
-        postedMSGS.append(msgid)
-        generateAndPostMsg(text, '#8-ball')
+    can_post = msgid not in postedMSGS and channel == 'C03DNGQA6SY'
+    if not can_post:
+        print('Cannot post')
+        return
+    
+    print(postedMSGS)
+    postedMSGS.add(msgid)
+    generateAndPostMsg(text, '#8-ball')
 
 
 def generate_msg(text):
     try:
-        new_prompt = system_prompt
+        new_prompt = system_prompt.copy()
         new_prompt.append({"role":"user","content":text})
         response = openai_client.chat.completions.create(
-            model = "gpt-3.5-turbo",
-            messages = system_prompt
+            model="gpt-3.5-turbo",
+            messages=new_prompt
         )
         print("RETURN:",response.choices[0].message)
         result = response.choices[0].message.content
@@ -84,25 +59,46 @@ def generateAndPostMsg(text, channel):
         client.chat_postMessage(channel='#8-ball', text=f"An error occurred: {exc}")
 
 
-app = Flask(__name__)
-CORS(app)
-@app.route("/slack/events",methods=['POST'])
-def Test():
-    if request.method == 'POST':
-        if not (request.args.get('challenge') is None):
-            print(request.args.get('challenge'))
-            return request.args.get('challenge')
-        else:
-            print(request.get_json().get('event', {}))
-            message(request.get_json().get('event', {}))
-            return 'wow!'
+slack_token = os.getenv('SLACK_TOKEN')
+signing_secret = os.getenv('SIGNING_SECRET')
+openai_api_key = os.getenv('OPENAI_API_KEY')
 
-    else:
-        return '<h1>This is the 8-ball! How are you doing today?</h1><a href="https://www.hackclub.com">Find us here ;)</a>'
+app = Flask(__name__)
+
+client = slack_sdk.WebClient(token=slack_token)
+slack_event_adapter = SlackEventAdapter(signing_secret, '/slack/events', app)
+
+openai_client = openai.OpenAI(api_key=openai_api_key)
+
+postedMSGS = set()
+announce = True
+
+@slack_event_adapter.on('message')
+def slack_events():
+    payload = request.get_json()
+    print(payload)
+    message(payload)
+
+@slack_event_adapter.on('app_mention')
+def app_mention(payload):
+    message(payload.get('event'))
 
 def run_server():
-    print('running server')
+    print('running server on port', os.getenv("PORT")) 
+     
     app.run(host='0.0.0.0', port=os.getenv("PORT"),debug=True)
-run_server()    
+
+
+if __name__ == "__main__":
+    try:
+        if announce:
+            client.chat_postMessage(
+                channel="#8-ball-reincarnated-testing",
+                text="The 8-ball has risen :skull:"
+            )
+    except Exception as e:
+        print(e)
+     
+    run_server()    
 
 
