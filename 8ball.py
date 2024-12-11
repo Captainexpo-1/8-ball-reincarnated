@@ -6,14 +6,10 @@ from flask import Flask, request
 from slackeventsapi import SlackEventAdapter
 import random
 from prompt import system_prompt
-
+import re
 # Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
-
-
-
-
 
 def message(payload):
     channel = payload.get('channel')
@@ -22,15 +18,15 @@ def message(payload):
     text = payload.get('text')
     msgid = payload.get('client_msg_id')
 
-    text = text.replace('<@U04M46MS56D>', '')
-    can_post = msgid not in postedMSGS and channel == 'C03DNGQA6SY'
+    text = re.sub(r'<@.+>', '', text)
+    can_post = msgid not in postedMSGS
     if not can_post:
         print('Cannot post')
         return
     
     print(postedMSGS)
     postedMSGS.add(msgid)
-    generateAndPostMsg(text, '#8-ball')
+    generateAndPostMsg(text, channel=channel)
 
 
 def generate_msg(text):
@@ -52,10 +48,9 @@ def generate_msg(text):
 def generateAndPostMsg(text, channel):
     try:
         result = generate_msg(text)
-
-        client.chat_postMessage(channel='#8-ball', text=result)
+        client.chat_postMessage(channel=channel, text=result)
     except Exception as exc:
-        client.chat_postMessage(channel='#8-ball', text=f"An error occurred: {exc}")
+        client.chat_postMessage(channel=channel, text="An error occurred: " + str(exc))
 
 
 slack_token = os.getenv('SLACK_TOKEN')
