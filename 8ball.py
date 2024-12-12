@@ -76,14 +76,11 @@ postedMSGS = set()
 announce = True
 
 @slack_event_adapter.on('message')
-def slack_events():
-    payload = request.get_json()
+def slack_events(payload):
     print(payload)
-    message(payload)
-
-@slack_event_adapter.on('app_mention')
-def app_mention(payload):
-    message(payload.get('event'))
+    event = payload.get('event')
+    if f'<@{os.getenv("BOT_ID")}>' in event['text']:
+        message(event)
 
 def run_server():
     print('running server on port', os.getenv("PORT")) 
