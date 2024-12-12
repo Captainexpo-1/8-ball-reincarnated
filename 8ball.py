@@ -79,6 +79,8 @@ announce = True
 def slack_events(payload):
     print(payload)
     event = payload.get('event')
+    if event.get('user') == os.getenv("BOT_ID"):
+        return
     if f'<@{os.getenv("BOT_ID")}>' in event['text']:
         message(event)
 
