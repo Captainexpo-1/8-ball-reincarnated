@@ -2,24 +2,25 @@ import slack_sdk
 from slack_sdk.errors import SlackApiError
 import os
 import openai
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from slackeventsapi import SlackEventAdapter
 import random
 from prompt import system_prompt
 import re
+from typing import Dict, Any
 # Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
 
-def message(payload: dict[str, str]):
-    channel = payload.get('channel')
+def message(payload: Dict[str, Any]) -> None:
+    channel: str = payload.get('channel')
     print(channel)
     #uid = payload.get('user')
-    text = payload.get('text')
-    msgid = payload.get('client_msg_id')
+    text: str = payload.get('text')
+    msgid: str = payload.get('client_msg_id')
 
     text = re.sub(r'<@.+>', '', text)
-    can_post = msgid not in postedMSGS
+    can_post: bool = msgid not in postedMSGS
     if not can_post:
         print('Cannot post')
         return
@@ -29,7 +30,7 @@ def message(payload: dict[str, str]):
     generateAndPostMsg(text, channel=channel)
 
 
-def generate_msg(text):
+def generate_msg(text: str) -> str:
     try:
         new_prompt = system_prompt.copy()
         new_prompt.append({"role":"user","content":text})
@@ -46,37 +47,38 @@ def generate_msg(text):
             presence_penalty=0
         )
         print("RETURN:",response.choices[0].message)
-        result = response.choices[0].message.content
+        result: str = response.choices[0].message.content
 
         print("OPENAI RESPONSE:", response)
         return result
     except Exception as e:
         print(e)
         return "An error occurred: " + str(e)
-def generateAndPostMsg(text, channel):
+
+def generateAndPostMsg(text: str, channel: str) -> None:
     try:
-        result = generate_msg(text)
+        result: str = generate_msg(text)
         client.chat_postMessage(channel=channel, text=result)
     except Exception as exc:
         client.chat_postMessage(channel=channel, text="An error occurred: " + str(exc))
 
 
-slack_token = os.getenv('SLACK_TOKEN')
-signing_secret = os.getenv('SIGNING_SECRET')
-openai_api_key = os.getenv('OPENAI_API_KEY')
+slack_token: str = os.getenv('SLACK_TOKEN')
+signing_secret: str = os.getenv('SIGNING_SECRET')
+openai_api_key: str = os.getenv('OPENAI_API_KEY')
 
-app = Flask(__name__)
+app: Flask = Flask(__name__)
 
-client = slack_sdk.WebClient(token=slack_token)
-slack_event_adapter = SlackEventAdapter(signing_secret, '/slack/events', app)
+client: slack_sdk.WebClient = slack_sdk.WebClient(token=slack_token)
+slack_event_adapter: SlackEventAdapter = SlackEventAdapter(signing_secret, '/slack/events', app)
 
-openai_client = openai.OpenAI(api_key=openai_api_key)
+openai_client: openai.OpenAI = openai.OpenAI(api_key=openai_api_key)
 
-postedMSGS = set()
-announce = True
+postedMSGS: set = set()
+announce: bool = True
 
 @app.route('/api/v0/message', methods=['POST'])
-def message_event():
+def message_event() -> str:
     """
     This endpoint is used to send a message to the 8-ball
     request body should be a json object with the following fields:
@@ -85,25 +87,27 @@ def message_event():
     - text: the message text
     - client_msg_id: the message id
     """
-    payload = request.get_json()
+    payload: Dict[str, Any] = request.get_json()
     print(payload)
     message(payload)
     return 'OK'
 
 @slack_event_adapter.on('message')
-def slack_events():
-    payload = request.get_json()
+def slack_events() -> None:
+    payload: Dict[str, Any] = request.get_json()
     print(payload)
     message(payload)
 
 @slack_event_adapter.on('app_mention')
-def app_mention(payload):
+def app_mention(payload: Dict[str, Any]) -> None:
     message(payload.get('event'))
 
-def run_server():
+def run_server() -> None:
     print('running server on port', os.getenv("PORT")) 
-     
-    app.run(host='0.0.0.0', port=os.getenv("PORT"),debug=True)
+    env: str = os.getenv('ENV')
+    use_debug: bool = env == 'development'
+        
+    app.run(host='0.0.0.0', port=os.getenv("PORT"),debug=use_debug)
 
 
 if __name__ == "__main__":
@@ -116,6 +120,4 @@ if __name__ == "__main__":
     except Exception as e:
         print(e)
      
-    run_server()    
-
-
+    run_server()
