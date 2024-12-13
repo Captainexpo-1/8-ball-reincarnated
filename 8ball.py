@@ -11,10 +11,10 @@ import re
 from dotenv import load_dotenv
 load_dotenv()
 
-def message(payload):
+def message(payload: dict[str, str]):
     channel = payload.get('channel')
     print(channel)
-    uid = payload.get('user')
+    #uid = payload.get('user')
     text = payload.get('text')
     msgid = payload.get('client_msg_id')
 
@@ -24,7 +24,7 @@ def message(payload):
         print('Cannot post')
         return
     
-    print(postedMSGS)
+    #print(postedMSGS)
     postedMSGS.add(msgid)
     generateAndPostMsg(text, channel=channel)
 
@@ -74,6 +74,21 @@ openai_client = openai.OpenAI(api_key=openai_api_key)
 
 postedMSGS = set()
 announce = True
+
+@app.route('/api/v0/message', methods=['POST'])
+def message_event():
+    """
+    This endpoint is used to send a message to the 8-ball
+    request body should be a json object with the following fields:
+    - channel: the channel id
+    - user: the user id
+    - text: the message text
+    - client_msg_id: the message id
+    """
+    payload = request.get_json()
+    print(payload)
+    message(payload)
+    return 'OK'
 
 @slack_event_adapter.on('message')
 def slack_events():
