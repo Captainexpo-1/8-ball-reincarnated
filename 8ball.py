@@ -92,12 +92,6 @@ def message_event() -> str:
     message(payload)
     return 'OK'
 
-@slack_event_adapter.on('message')
-def slack_events() -> None:
-    payload: Dict[str, Any] = request.get_json()
-    print(payload)
-    message(payload)
-
 @slack_event_adapter.on('app_mention')
 def app_mention(payload: Dict[str, Any]) -> None:
     message(payload.get('event'))
@@ -106,7 +100,7 @@ def run_server() -> None:
     print('running server on port', os.getenv("PORT")) 
     env: str = os.getenv('ENV')
     use_debug: bool = env == 'development'
-        
+
     app.run(host='0.0.0.0', port=os.getenv("PORT"),debug=use_debug)
 
 
