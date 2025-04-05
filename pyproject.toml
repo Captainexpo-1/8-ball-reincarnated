@@ -1,0 +1,14 @@
+[project]
+name = "8-ball-reincarnated"
+version = "0.1.0"
+description = "A simple Slack bot that uses OpenAI's GPT-3 to answer questions."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "flask>=3.1.0",
+    "openai>=1.70.0",
+    "python-dotenv>=1.1.0",
+    "requests>=2.32.3",
+    "slack-sdk>=3.35.0",
+    "slackeventsapi>=3.0.3",
+]

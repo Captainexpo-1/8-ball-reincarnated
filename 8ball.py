@@ -6,9 +6,9 @@ from slackeventsapi import SlackEventAdapter
 from prompt import Prompt
 import re
 from typing import Dict, Any
-# Load environment variables
+
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv(override=True)
 
 def message(payload: Dict[str, Any]) -> None:
     channel: str = payload.get('channel')
