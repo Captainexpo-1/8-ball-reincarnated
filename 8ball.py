@@ -1,11 +1,9 @@
 import slack_sdk
-from slack_sdk.errors import SlackApiError
 import os
 import openai
-from flask import Flask, request, jsonify
+from flask import Flask
 from slackeventsapi import SlackEventAdapter
-import random
-from prompt import system_prompt
+from prompt import Prompt
 import re
 from typing import Dict, Any
 # Load environment variables
@@ -32,7 +30,8 @@ def message(payload: Dict[str, Any]) -> None:
 
 def generate_msg(text: str) -> str:
     try:
-        new_prompt = system_prompt.copy()
+        p = Prompt()
+        new_prompt = p.get_prompt_with_input(text)
         new_prompt.append({"role":"user","content":text})
         response = openai_client.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -77,20 +76,6 @@ openai_client: openai.OpenAI = openai.OpenAI(api_key=openai_api_key)
 postedMSGS: set = set()
 announce: bool = True
 
-@app.route('/api/v0/message', methods=['POST'])
-def message_event() -> str:
-    """
-    This endpoint is used to send a message to the 8-ball
-    request body should be a json object with the following fields:
-    - channel: the channel id
-    - user: the user id
-    - text: the message text
-    - client_msg_id: the message id
-    """
-    payload: Dict[str, Any] = request.get_json()
-    print(payload)
-    message(payload)
-    return 'OK'
 
 @slack_event_adapter.on('app_mention')
 def app_mention(payload: Dict[str, Any]) -> None:
@@ -108,7 +93,7 @@ if __name__ == "__main__":
     try:
         if announce:
             client.chat_postMessage(
-                channel="#8-ball-reincarnated-testing",
+                channel=os.environ['STATUS_CHANNEL'],
                 text="The 8-ball has risen :skull:"
             )
     except Exception as e:
